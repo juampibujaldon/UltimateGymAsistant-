@@ -39,6 +39,15 @@ app.include_router(sets.router)
 app.include_router(progress.router)
 app.include_router(analysis.router)
 
+@app.get("/")
+def root():
+    return {
+        "name": "Gym AI Coach API",
+        "status": "online",
+        "health": "/health",
+        "docs": "/docs",
+    }
+
 @app.get("/health")
 def health_check():
     return {"status": "online", "version": "1.1.0"}
