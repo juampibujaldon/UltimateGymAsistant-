@@ -16,6 +16,9 @@ SECRET_KEY = os.getenv("SECRET_KEY", "your-default-secure-secret-key-1234567890"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24 * 7  # 1 week
 
+if os.getenv("ENVIRONMENT", "development").lower() == "production" and SECRET_KEY == "your-default-secure-secret-key-1234567890":
+    raise RuntimeError("Set a secure SECRET_KEY before running in production.")
+
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Verify a plain password against a hashed one."""
     return bcrypt.checkpw(
