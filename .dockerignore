@@ -1,0 +1,5 @@
+.git
+backend/.env
+backend/__pycache__/
+backend/*.py[cod]
+backend/gym_coach.db
