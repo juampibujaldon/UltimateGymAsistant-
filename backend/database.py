@@ -11,8 +11,18 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+
+def normalize_database_url(url: str) -> str:
+    """Normalize provider-specific URLs into a SQLAlchemy-compatible format."""
+    if url.startswith("postgres://"):
+        return url.replace("postgres://", "postgresql://", 1)
+    return url
+
+
 # SQLite database file path from env or default
-SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./gym_coach.db")
+SQLALCHEMY_DATABASE_URL = normalize_database_url(
+    os.getenv("DATABASE_URL", "sqlite:///./gym_coach.db")
+)
 
 # engine configuration
 connect_args = {}
