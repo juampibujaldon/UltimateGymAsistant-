@@ -11,14 +11,39 @@ from nutrition.router import router as nutrition_router
 from seed import seed_exercises
 
 ENVIRONMENT = os.getenv("ENVIRONMENT", "development").lower()
-ALLOWED_ORIGINS_RAW = os.getenv(
-    "ALLOWED_ORIGINS",
-    "http://127.0.0.1:5173,http://localhost:5173" if ENVIRONMENT != "production" else "",
-)
-ALLOWED_ORIGINS = [origin.strip() for origin in ALLOWED_ORIGINS_RAW.split(",") if origin.strip()]
+
+
+def parse_allowed_origins() -> list[str]:
+    origins: list[str] = []
+
+    raw_allowed_origins = os.getenv("ALLOWED_ORIGINS", "")
+    frontend_url = os.getenv("FRONTEND_URL", "")
+    railway_public_domain = os.getenv("RAILWAY_PUBLIC_DOMAIN", "")
+
+    for raw_value in (raw_allowed_origins, frontend_url):
+        origins.extend(origin.strip() for origin in raw_value.split(",") if origin.strip())
+
+    if railway_public_domain:
+        origins.append(f"https://{railway_public_domain}")
+
+    if ENVIRONMENT != "production":
+        origins.extend(
+            [
+                "http://127.0.0.1:5173",
+                "http://localhost:5173",
+                "http://127.0.0.1:8080",
+                "http://localhost:8080",
+            ]
+        )
+
+    # Preserve order while removing duplicates.
+    return list(dict.fromkeys(origins))
+
+
+ALLOWED_ORIGINS = parse_allowed_origins()
 
 if ENVIRONMENT == "production" and not ALLOWED_ORIGINS:
-    raise RuntimeError("Set ALLOWED_ORIGINS before running in production.")
+    raise RuntimeError("Set ALLOWED_ORIGINS or FRONTEND_URL before running in production.")
 
 # ─── Create tables ───────────────────────────────────────────────────────────
 # For SQLite, we recreate tables if the schema changed.

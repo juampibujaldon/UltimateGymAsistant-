@@ -98,6 +98,14 @@ def demo_login(db: Session = Depends(get_db)) -> Any:
     )
     return {"access_token": access_token, "token_type": "bearer"}
 
+
+@router.get("/me", response_model=schemas.UserRead)
+def read_current_user(
+    current_user: models.User = Depends(get_current_user)
+) -> Any:
+    """Return the authenticated user's profile."""
+    return current_user
+
 @router.patch("/me", response_model=schemas.UserRead)
 def update_profile(
     user_update: schemas.UserUpdate,
