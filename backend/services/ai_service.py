@@ -248,7 +248,7 @@ Your session shows solid effort with proper RIR management. The progression in l
         workouts = db.query(models.Workout).filter(models.Workout.user_id == user_id, models.Workout.is_finished == True).order_by(models.Workout.date.desc()).limit(10).all()
         
         prompt = f"""
-        Act as an elite fitness and nutrition coach.
+        Act as an elite fitness coach.
         You are analyzing the profile of a user:
         - Weight: {user.weight if user.weight else 'Unknown'} kg
         - Height: {user.height if user.height else 'Unknown'} cm
@@ -257,7 +257,7 @@ Your session shows solid effort with proper RIR management. The progression in l
         
         Based on this data, provide a highly personalized, actionable summary emphasizing:
         1. A brief analysis of their current metrics (e.g. BMI approximation if both weight and height exist).
-        2. Specific nutritional and training advice to reach their goal ("{user.goal}").
+        2. Specific training and recovery advice to reach their goal ("{user.goal}").
         3. A motivational closing statement.
         
         CRITICAL INSTRUCTION: You MUST write your ENTIRE analysis and response strictly in the '{lang}' language. Use markdown formatting with bolding and bullet points. Do NOT include any JSON syntax, just the raw markdown string.

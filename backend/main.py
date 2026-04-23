@@ -4,10 +4,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 import models
-import nutrition.models
 from database import engine, SessionLocal
 from routes import exercises, workouts, sets, progress, analysis, auth
-from nutrition.router import router as nutrition_router
 from seed import seed_exercises
 
 ENVIRONMENT = os.getenv("ENVIRONMENT", "development").lower()
@@ -52,7 +50,6 @@ app.include_router(workouts.router)
 app.include_router(sets.router)
 app.include_router(progress.router)
 app.include_router(analysis.router)
-app.include_router(nutrition_router)
 
 @app.get("/")
 def root():
